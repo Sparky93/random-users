@@ -1,8 +1,9 @@
-package com.example.randomuser
+package com.example.randomuser.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.randomuser.ui.main.MainFragment
+import com.example.randomuser.R
+import com.example.randomuser.presentation.list.ListFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -11,7 +12,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.main_activity)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, MainFragment.newInstance())
+                .replace(R.id.container, ListFragment.newInstance())
                 .commitNow()
         }
     }
