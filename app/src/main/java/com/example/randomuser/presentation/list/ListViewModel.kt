@@ -1,19 +1,16 @@
 package com.example.randomuser.presentation.list
 
 import androidx.lifecycle.ViewModel
-import com.example.randomuser.data.api.RandomUserService
 import com.example.randomuser.data.model.RandomUser
-import com.example.randomuser.data.repository.random_user.RandomUserRepositoryImpl
-import com.example.randomuser.data.repository.random_user.datasource.RandomUserCacheDataSourceImpl
-import com.example.randomuser.data.repository.random_user.datasource.RandomUserLocalDataSourceImpl
-import com.example.randomuser.data.repository.random_user.datasource.RandomUserRemoteDataSourceImpl
 import com.example.randomuser.domain.usecase.random_user.GetRandomUsersUsecase
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 
-class ListViewModel : ViewModel() {
+class ListViewModel(
+    private val getRandomUsersUsecase: GetRandomUsersUsecase
+) : ViewModel() {
     val compositeDisposable: CompositeDisposable by lazy { CompositeDisposable() }
 
     val onNeedNextPage: Subject<Int> by lazy { PublishSubject.create() }
@@ -28,13 +25,8 @@ class ListViewModel : ViewModel() {
             .subscribe { getRandomUsers(it) })
     }
 
-    private fun getRandomUsers(page: Int) = GetRandomUsersUsecase(
-        RandomUserRepositoryImpl(
-            RandomUserRemoteDataSourceImpl(RandomUserService.getApi()),
-            RandomUserCacheDataSourceImpl(),
-            RandomUserLocalDataSourceImpl()
-        )
-    ).execute(page = page, results = 20, seed = "abc")
+    private fun getRandomUsers(page: Int) = getRandomUsersUsecase
+        .execute(page = page, results = 20, seed = "abc")
         .doOnError { it.message?.let { msg -> onErrorReceived.onNext(msg) } }
         .subscribe { onDataReceived.onNext(it) }
         .also { compositeDisposable.add(it) }
