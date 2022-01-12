@@ -1,4 +1,4 @@
-package com.example.randomuser.data.api.model
+package com.example.randomuser.data.model
 
 data class RandomUser(
     val name: Name,

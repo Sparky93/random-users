@@ -2,7 +2,11 @@ package com.example.randomuser.presentation.list
 
 import androidx.lifecycle.ViewModel
 import com.example.randomuser.data.api.RandomUserService
-import com.example.randomuser.data.api.model.RandomUser
+import com.example.randomuser.data.model.RandomUser
+import com.example.randomuser.data.repository.random_user.RandomUserRepositoryImpl
+import com.example.randomuser.data.repository.random_user.datasource.RandomUserCacheDataSourceImpl
+import com.example.randomuser.data.repository.random_user.datasource.RandomUserLocalDataSourceImpl
+import com.example.randomuser.data.repository.random_user.datasource.RandomUserRemoteDataSourceImpl
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -24,15 +28,16 @@ class ListViewModel : ViewModel() {
             .subscribe { getRandomUsers(it) })
     }
 
-    private fun getRandomUsers(page: Int) = RandomUserService.getApi()
-        .getUsers(page = page, results = 20, seed = "abc")
+    private fun getRandomUsers(page: Int) = RandomUserRepositoryImpl(
+        RandomUserRemoteDataSourceImpl(RandomUserService.getApi()),
+        RandomUserCacheDataSourceImpl(),
+        RandomUserLocalDataSourceImpl()
+    )
+        .getRandomUsers(page = page, results = 20, seed = "abc")
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .map { it.results }
-        .subscribe { randomUsers, err ->
-            err?.message?.let { onErrorReceived.onNext(it) }
-            onDataReceived.onNext(randomUsers)
-        }
+        .doOnError { it.message?.let { msg -> onErrorReceived.onNext(msg) } }
+        .subscribe { onDataReceived.onNext(it) }
         .also { compositeDisposable.add(it) }
 
     override fun onCleared() = compositeDisposable.dispose()
