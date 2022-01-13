@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="randomUser"
+            type="com.example.randomuser.data.model.RandomUser" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/profile_picture"
+            android:layout_width="@dimen/default_civ_size"
+            android:layout_height="@dimen/default_civ_size"
+            android:layout_marginStart="@dimen/default_margin_start"
+            app:layout_constraintBottom_toBottomOf="@id/details"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/full_name"
+            app:setImageUrl="@{randomUser.picture.thumbnail}"
+            tools:src="@drawable/ic_launcher_background" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/full_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_margin_start"
+            android:layout_marginTop="@dimen/default_margin_top"
+            app:layout_constraintStart_toEndOf="@id/profile_picture"
+            app:layout_constraintTop_toTopOf="parent"
+            app:setFullName="@{randomUser.name}"
+            tools:text="Scott Ernest" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/full_name"
+            app:layout_constraintTop_toBottomOf="@id/full_name"
+            app:setDetails="@{randomUser}"
+            tools:text="28 years from US" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/current_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin_top"
+            android:layout_marginEnd="@dimen/default_margin_end"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:setCurrentDate="@{randomUser.location.timezone}"
+            tools:text="15:38" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_top_star"
+            android:src="@drawable/outline_star_outline_24"
+            app:layout_constraintEnd_toEndOf="@id/current_date"
+            app:layout_constraintStart_toStartOf="@id/current_date"
+            app:layout_constraintTop_toBottomOf="@id/current_date"
+            app:tint="@color/divider_gray" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/attachments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/default_margin_end"
+            android:src="@drawable/outline_attachment_black_24"
+            app:layout_constraintBottom_toBottomOf="@id/current_date"
+            app:layout_constraintEnd_toStartOf="@id/current_date"
+            app:layout_constraintTop_toTopOf="@id/current_date"
+            app:tint="@color/divider_gray" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/margin_top_divider"
+            android:background="@color/divider_gray"
+            app:layout_constraintTop_toBottomOf="@id/favorite" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
